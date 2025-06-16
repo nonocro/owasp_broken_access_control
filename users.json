@@ -23,5 +23,14 @@
     "company": "Ecole : ESGI Nantes /  Entreprise : SBII",
     "password": "test",
     "id": "111"
+  }, 
+  {
+    "id": "2",
+    "username": "abc",
+    "email": "abc@abc.abc",
+    "description": "abc",
+    "company": "abc co.",
+    "password": "abc",
+    "is_admin": true
   }
 ]

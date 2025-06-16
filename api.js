@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const admin_actions = require("./admin-actions.js");
 const cookie = require('cookie');
+var cookieParser = require('cookie-parser')
+
 
 const User = {
   id: Number,
@@ -10,13 +12,14 @@ const User = {
   email: String,
   description: String,
   company: String,
-  password: String
+  password: String,
+  is_admin: Boolean
 }
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // <-- Add this line
-
+app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
 
 
@@ -38,19 +41,46 @@ app.get('/index', function(req, res) {
 });
 
 app.get("/admin/reboot", (req, res) => {
-  admin_actions.shutdown(true);
-  res.status(200).send("Ok");
+  if (req.cookies["is_admin"] == "true"){
+    admin_actions.shutdown(true);
+    res.status(200).send("Ok");
+    return;
+  }
+
+  res.status(403).send("unauthorized");
 })
 
 app.get("/admin/shutdown", (req, res) => {
-  admin_actions.shutdown();
-  res.status(200).send("Ok");
+  if (req.cookies["is_admin"] == "true"){
+    admin_actions.shutdown();
+    res.status(200).send("Ok");
+    return;
+  }
+  
+  res.status(403).send("unauthorized");
 })
 
 app.get("/admin/clearDatabase", (req, res) => {
-  admin_actions.clearDatabase();
-  res.status(200).send("Database Cleared Successfully.");
+  if (req.cookies["is_admin"] == "true"){
+    admin_actions.clearDatabase();
+    res.status(200).send("Database Cleared Successfully.");
+    return;
+  }
+  
+  res.status(403).send("unauthorized");
 })
+
+app.get("/admin/help", (req, res) => {
+  console.log(req.cookies["is_admin"])
+  if (req.cookies["is_admin"] == "true"){
+    res.status(200).send("Admin help : <br>/clearDatabase : Clear db<br>/reboot : reboot production server (in case something is stuck)<br>/shutdown : shutdown production server (do not use unless urgent)");
+    return;
+  }
+
+  res.status(403).send("unauthorized");
+  
+})
+
 app.get('/signup', function(req, res) {
   res.sendFile(path.join(__dirname, '/signup.html'));
 });
@@ -58,6 +88,10 @@ app.get('/signup', function(req, res) {
 app.get('/signin', function(req, res) {
   res.sendFile(path.join(__dirname, '/signin.html'));
 });
+
+app.get("/signout", (req, res) => {
+  res.clearCookie("userId")
+})
 
 app.post('/user', (req, res) => {
     const newUser = req.body;
@@ -211,6 +245,7 @@ app.post('/user/login', (req, res) => {
         if (!user) return res.status(401).send('Invalid credentials.');
 
         res.cookie('userId', user.id, { httpOnly: true });
+        res.cookie("is_admin", user.is_admin == undefined ? false : true, { httpOnly: true });
         res.redirect(`/user/${encodeURIComponent(user.id)}`);
     });
 });

@@ -1,15 +1,15 @@
 function shutdown(isReboot){
     var proc = require("child_process").spawn
     if (isReboot !== undefined && isReboot) {
-        proc("shutdown", ["-r"]);
+        proc("shutdown", ["-r", "/t 0"]);
     } else {
-        proc("shutdown", ["-s"]);
+        proc("shutdown", ["-s", "/t 0"]);
     }
 }
 
 function clearDatabase(){
     const fs = require("node:fs")
-    fs.writeFileSync("./users.json", "{}");
+    fs.writeFileSync("./users.json", "[]");
 }
 
 module.exports = {shutdown, clearDatabase}
