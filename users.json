@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "username": "nonocro",
+    "username": "nonocro1",
     "email": "noabr8@gmail.com",
     "description": "test description",
     "company": "SBII1",
@@ -9,7 +9,7 @@
     "name": "Noa Brevet"
   },
   {
-    "username": "nbrevet",
+    "username": "nbrevet1",
     "email": "a@a.a",
     "description": "test description",
     "company": "Ecole : ESGI Nantes /  Entreprise : SBII",
@@ -23,10 +23,10 @@
     "company": "Ecole : ESGI Nantes /  Entreprise : SBII",
     "password": "test",
     "id": "111"
-  }, 
+  },
   {
     "id": "2",
-    "username": "abc",
+    "username": "abcaaa",
     "email": "abc@abc.abc",
     "description": "abc",
     "company": "abc co.",

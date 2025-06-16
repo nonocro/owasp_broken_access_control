@@ -5,6 +5,7 @@ const admin_actions = require("./admin-actions.js");
 const cookie = require('cookie');
 var cookieParser = require('cookie-parser')
 
+EDIT_MODE = false;
 
 const User = {
   id: Number,
@@ -158,8 +159,14 @@ app.get('/users', (req, res) => {
     });
 });
 
+app.get('/edit-mode/:id', (req, res) => {
+    const id = req.params.id;
+    EDIT_MODE = !EDIT_MODE;
+    res.redirect(`/user/${encodeURIComponent(id)}`);
+});
 
 app.get('/user/:id', (req, res) => {
+    console.log("EDIT_MODE", EDIT_MODE);
     const id = req.params.id;
     const usersFile = path.join(__dirname, 'users.json');
     const htmlFile = path.join(__dirname, 'user.html');
@@ -180,21 +187,27 @@ app.get('/user/:id', (req, res) => {
         if (req.headers.cookie) {
             cookies = cookie.parse(req.headers.cookie);
         }
+        let editModeButton = '';
+        if( cookies['userId'] === user.id){
+            editModeButton = `<button onclick="location.href='/edit-mode/${encodeURIComponent(user.id)}'">${EDIT_MODE ? 'Désactiver le mode édition' : 'Activer le mode édition'}</button>`;
+        }
+        let canEdit = EDIT_MODE;
         let editButton = '';
-        if (cookies['userId'] === user.id) {
+        if (canEdit) {
             editButton = `<button type="submit">Modifier</button>`;
         }
 
         fs.readFile(htmlFile, 'utf8', (err, html) => {
             if (err) return res.status(500).send('Fichier HTML non trouvé.');
             let result = html
-                .replace('<!-- USER_ID -->', user.id || '')
+                .replace(/<!-- USER_ID -->/g, user.id || '')
                 .replace(/<!-- USERNAME -->/g, user.username || '')
                 .replace('<!-- EMAIL -->', user.email || '')
                 .replace('<!-- DESCRIPTION -->', user.description || '')
                 .replace('<!-- COMPANY -->', user.company || '')
-                .replace(/<!-- READONLY_ATTR -->/g, cookies['userId'] === user.id ? '' : 'readonly')
-                .replace('<!-- EDIT_BUTTON -->', editButton);
+                .replace(/<!-- READONLY_ATTR -->/g, canEdit ? '' : 'readonly')
+                .replace('<!-- EDIT_BUTTON -->', editButton)
+                .replace('<!-- EDIT_MODE_BUTTON -->', editModeButton);
             res.send(result);
         });
     });
