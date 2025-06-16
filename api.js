@@ -168,7 +168,6 @@ app.get('/edit-mode/:id', (req, res) => {
 });
 
 app.get('/user/:id', (req, res) => {
-    console.log("EDIT_MODE", EDIT_MODE);
     const id = req.params.id;
     const usersFile = path.join(__dirname, 'users.json');
     const htmlFile = path.join(__dirname, 'user.html');
@@ -193,7 +192,7 @@ app.get('/user/:id', (req, res) => {
         if( cookies['userId'] === user.id){
             editModeButton = `<button onclick="location.href='/edit-mode/${encodeURIComponent(user.id)}'">${EDIT_MODE ? 'Désactiver le mode édition' : 'Activer le mode édition'}</button>`;
         }
-        let canEdit = EDIT_MODE;
+        let canEdit = EDIT_MODE && cookies['userId'] === user.id;
         let editButton = '';
         if (canEdit) {
             editButton = `<button type="submit">Modifier</button>`;
