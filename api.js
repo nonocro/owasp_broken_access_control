@@ -92,6 +92,8 @@ app.get('/signin', function(req, res) {
 
 app.get("/signout", (req, res) => {
   res.clearCookie("userId")
+  res.clearCookie("is_admin")
+  res.status(200).send("Signed out")
 })
 
 app.post('/user', (req, res) => {
