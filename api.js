@@ -75,7 +75,7 @@ app.post('/user', (req, res) => {
         let newId = 1;
         if (users.length > 0) {
             const lastUser = users[users.length - 1];
-            newId = (lastUser.id || 0) + 1;
+            newId = (parseInt(lastUser.id) || 0) + 1;
         }
         newUser.id = newId;
 
@@ -83,7 +83,7 @@ app.post('/user', (req, res) => {
 
         fs.writeFile(usersFile, JSON.stringify(users, null, 2), (err) => {
             if (err) return res.status(500).send('Erreur lors de l\'enregistrement.');
-            res.status(201).send('Utilisateur ajouté.');
+            res.redirect(`/user/${encodeURIComponent(newUser.id)}`);
         });
     });
 });
@@ -141,24 +141,25 @@ app.get('/user/:id', (req, res) => {
         
         const user = users.find(u => u.id === id);
         if (!user) return res.status(404).send('Utilisateur non trouvé.');
-            let cookies = {};
-            if (req.headers.cookie) {
-                cookies = cookie.parse(req.headers.cookie);
-            }
-            let editButton = '';
-            if (cookies[user.id] === 'Connected') {
-                editButton = `<form action="/user/${user.username}/edit" method="get">
-                                <button type="submit">Modifier</button>
-                                </form>`;
+
+        let cookies = {};
+        if (req.headers.cookie) {
+            cookies = cookie.parse(req.headers.cookie);
+        }
+        let editButton = '';
+        if (cookies['userId'] === user.id) {
+            editButton = `<button type="submit">Modifier</button>`;
         }
 
         fs.readFile(htmlFile, 'utf8', (err, html) => {
             if (err) return res.status(500).send('Fichier HTML non trouvé.');
             let result = html
+                .replace('<!-- USER_ID -->', user.id || '')
                 .replace(/<!-- USERNAME -->/g, user.username || '')
                 .replace('<!-- EMAIL -->', user.email || '')
                 .replace('<!-- DESCRIPTION -->', user.description || '')
                 .replace('<!-- COMPANY -->', user.company || '')
+                .replace(/<!-- READONLY_ATTR -->/g, cookies['userId'] === user.id ? '' : 'readonly')
                 .replace('<!-- EDIT_BUTTON -->', editButton);
             res.send(result);
         });
@@ -166,7 +167,7 @@ app.get('/user/:id', (req, res) => {
 });
 
 app.post('/user/update/:id', (req, res) => {
-    const username = req.params.username;
+    const id = req.params.id;
     const updatedUser = req.body;
 
     const usersFile = path.join(__dirname, 'users.json');
@@ -187,7 +188,7 @@ app.post('/user/update/:id', (req, res) => {
 
         fs.writeFile(usersFile, JSON.stringify(users, null, 2), (err) => {
             if (err) return res.status(500).send('Error updating user.');
-            res.status(200).send('User updated.');
+            res.redirect(`/user/${encodeURIComponent(id)}`);
         });
     });
 });
@@ -209,7 +210,7 @@ app.post('/user/login', (req, res) => {
         const user = users.find(u => u.username === username && u.password === password);
         if (!user) return res.status(401).send('Invalid credentials.');
 
-        res.cookie(user.id, 'Connected', { httpOnly: true });
+        res.cookie('userId', user.id, { httpOnly: true });
         res.redirect(`/user/${encodeURIComponent(user.id)}`);
     });
 });

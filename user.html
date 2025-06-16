@@ -6,18 +6,18 @@
 </head>
 <body>
     <h1>Profil de <!-- USERNAME --></h1>
-    <form action="/user" method="post">
+    <form action="/user/update/<!-- USER_ID -->" method="post">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" name="username" value="<!-- USERNAME -->" required>
+        <input type="text" id="username" name="username" value="<!-- USERNAME -->" <!-- READONLY_ATTR --> required>
         
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<!-- EMAIL -->" required>
+        <input type="email" id="email" name="email" value="<!-- EMAIL -->" <!-- READONLY_ATTR --> required>
         
         <label for="description">Description :</label>
-        <input type="description" id="description" name="description" value="<!-- DESCRIPTION -->" required>
+        <input type="description" id="description" name="description" value="<!-- DESCRIPTION -->" <!-- READONLY_ATTR --> required>
 
         <label for="company">Entreprise:</label>
-        <input type="text" id="company" name="company" value="<!-- COMPANY -->" required>
+        <input type="text" id="company" name="company" value="<!-- COMPANY -->" <!-- READONLY_ATTR --> required>
         
         <!-- EDIT_BUTTON -->
     </form>

@@ -3,9 +3,25 @@
     "id": "1",
     "username": "nonocro",
     "email": "noabr8@gmail.com",
-    "description": "je suis nul en php",
-    "company": "Sous gros chomage",
+    "description": "test description",
+    "company": "SBII1",
     "password": "tuMeConnaisPas",
     "name": "Noa Brevet"
+  },
+  {
+    "username": "nbrevet",
+    "email": "a@a.a",
+    "description": "test description",
+    "company": "Ecole : ESGI Nantes /  Entreprise : SBII",
+    "password": "test",
+    "id": "11"
+  },
+  {
+    "username": "nbrevet",
+    "email": "a@a.a",
+    "description": "test description",
+    "company": "Ecole : ESGI Nantes /  Entreprise : SBII",
+    "password": "test",
+    "id": "111"
   }
 ]
