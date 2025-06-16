@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S'inscrire</title>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Compte</h1>
+        </header>
+        <section>
+            <h2>S'inscrire</h2>
+            <form action="/user" method="post">
+                <label for="username">Nom d'utilisateur:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="description">Description :</label>
+                <input type="description" id="description" name="description" required>
+
+                <label for="company">Entreprise:</label>
+                <input type="text" id="company" name="company" required>
+
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">S'inscrire</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
