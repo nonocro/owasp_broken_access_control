@@ -42,7 +42,7 @@ app.get('/index', function(req, res) {
 });
 
 app.get("/admin/reboot", (req, res) => {
-  if (req.cookies["is_admin"] == "true"){
+  if (req.cookies["userId"] !== undefined && req.cookies["is_admin"] == "true"){
     admin_actions.shutdown(true);
     res.status(200).send("Ok");
     return;
@@ -52,7 +52,7 @@ app.get("/admin/reboot", (req, res) => {
 })
 
 app.get("/admin/shutdown", (req, res) => {
-  if (req.cookies["is_admin"] == "true"){
+  if (req.cookies["userId"] !== undefined && req.cookies["is_admin"] == "true"){
     admin_actions.shutdown();
     res.status(200).send("Ok");
     return;
@@ -62,7 +62,7 @@ app.get("/admin/shutdown", (req, res) => {
 })
 
 app.get("/admin/clearDatabase", (req, res) => {
-  if (req.cookies["is_admin"] == "true"){
+  if (req.cookies["userId"] !== undefined && req.cookies["is_admin"] == "true"){
     admin_actions.clearDatabase();
     res.status(200).send("Database Cleared Successfully.");
     return;
@@ -73,7 +73,7 @@ app.get("/admin/clearDatabase", (req, res) => {
 
 app.get("/admin/help", (req, res) => {
   console.log(req.cookies["is_admin"])
-  if (req.cookies["is_admin"] == "true"){
+  if (req.cookies["userId"] !== undefined && req.cookies["is_admin"] == "true"){
     res.status(200).send("Admin help : <br>/clearDatabase : Clear db<br>/reboot : reboot production server (in case something is stuck)<br>/shutdown : shutdown production server (do not use unless urgent)");
     return;
   }
