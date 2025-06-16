@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const admin_actions = require("./admin-actions.mjs");
+const admin_actions = require("./admin-actions.js");
 
 const app = express ();
 app.use(express.json());
